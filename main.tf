@@ -9,10 +9,8 @@ resource "aws_launch_configuration" "example" {
 
     user_data = <<-EOF
                 #!/bin/bash
-                yum install -y httpd
-                systemctl start httpd
-                aws s3 cp s3://testterraform123-tf/index.html /var/www/html/index.html
-                nohup busybox httpd -f -p 8080 &
+                echo "Hai" > index.html
+                nohup busybox httpd -f -p ${var.server_port} &
                 EOF
     lifecycle {
         create_before_destroy = true
