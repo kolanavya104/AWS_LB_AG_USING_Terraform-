@@ -30,14 +30,26 @@ jobs:
         sudo mv terraform /usr/local/bin/
         terraform --version
 
-    - name: Terraform Init for main.tf
+    - name: Terraform Init
       working-directory: ./
-      run: |
-        terraform init
-        terraform apply -auto-approve main.tf
+      run: terraform init
+
+    - name: Terraform Plan
+      working-directory: ./
+      run: terraform plan -out=tfplan
+
+    - name: Terraform Apply
+      working-directory: ./
+      run: terraform apply -auto-approve tfplan
 
     - name: Terraform Init for dns.tf
       working-directory: ./
-      run: |
-        terraform init
-        terraform apply -auto-approve dns.tf
+      run: terraform init
+
+    - name: Terraform Plan for dns.tf
+      working-directory: ./
+      run: terraform plan -out=dns.tfplan
+
+    - name: Terraform Apply for dns.tf
+      working-directory: ./
+      run: terraform apply -auto-approve dns.tfplan
