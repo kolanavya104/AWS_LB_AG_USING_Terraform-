@@ -103,7 +103,7 @@ resource "aws_security_group" "alb" {
 
 resource "aws_lb_target_group" "asg" {
   name     = "terraform-asg-example"
-  port     = var.server_port
+  port     = 8080
   protocol = "HTTP"
   vpc_id   = data.aws_vpc.default.id
 
