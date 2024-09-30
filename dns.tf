@@ -26,13 +26,8 @@ resource "aws_route53_record" "getterraform_com" {
   }
 
   lifecycle {
-    create_before_destroy = true  # Optional: Prevent resource destruction before re-creation
-  }
-
-  # Avoid creating a new record if it already exists
-  # The `prevent_destroy` will prevent accidental deletion
-  lifecycle {
-    prevent_destroy = true
+    create_before_destroy = true  # Prevent resource destruction before re-creation
+    prevent_destroy = true         # Prevent accidental deletion
   }
 }
 
