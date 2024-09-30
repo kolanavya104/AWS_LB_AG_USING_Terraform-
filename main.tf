@@ -14,7 +14,6 @@ resource "aws_launch_configuration" "example" {
                 aws s3 cp s3://testterraform123-tf/index.html /var/www/html/index.html
                 nohup busybox httpd -f -p 8080 &
                 EOF
-
     lifecycle {
         create_before_destroy = true
     }
