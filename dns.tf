@@ -10,19 +10,19 @@ data "terraform_remote_state" "outputs" {
 
 # Fetch the Route 53 hosted zone for the domain
 data "aws_route53_zone" "primary" {
-  name = data.terraform_remote_state.outputs.outputs.domain_name  # Remove .value
+  name = data.terraform_remote_state.outputs.outputs.domain_name  # Use the domain name from the outputs
 }
 
-# Create an A Record that points to the ALB DNS
+# Create or update an A Record that points to the ALB DNS
 resource "aws_route53_record" "getterraform_com" {
   zone_id = data.aws_route53_zone.primary.zone_id
 
-  name    = data.terraform_remote_state.outputs.outputs.domain_name  # Remove .value
+  name    = data.terraform_remote_state.outputs.outputs.domain_name
   type    = "A"
 
   alias {
-    name                   = data.terraform_remote_state.outputs.outputs.alb_dns_name  # Remove .value
-    zone_id                = data.terraform_remote_state.outputs.outputs.alb_zone_id  # Remove .value
+    name                   = data.terraform_remote_state.outputs.outputs.alb_dns_name
+    zone_id                = data.terraform_remote_state.outputs.outputs.alb_zone_id
     evaluate_target_health = true
   }
 }
