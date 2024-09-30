@@ -1,31 +1,23 @@
 # Fetch the Route 53 hosted zone for the domain
 data "aws_route53_zone" "primary" {
-  name = "getterraform.com"  # You can also use data from the remote state if needed
+  name = "getterraform.com"  # Your domain name
 }
 
-# Check for the existing Route 53 A record
-data "aws_route53_record" "existing_record" {
+# Existing Route53 A record update for ALB
+resource "aws_route53_record" "update_record_getterraform_com" {
   zone_id = data.aws_route53_zone.primary.zone_id
-  name    = "getterraform.com."
-  type    = "A"
-}
-
-# Create the Route 53 record only if it doesn't already exist
-resource "aws_route53_record" "getterraform_com" {
-  count = data.aws_route53_record.existing_record.id == "" ? 1 : 0
-
-  zone_id = data.aws_route53_zone.primary.zone_id
-  name    = "getterraform.com"
+  name    = "getterraform.com"  # Your domain name
   type    = "A"
 
   alias {
-    name                   = data.terraform_remote_state.outputs.outputs.alb_dns_name
-    zone_id                = data.terraform_remote_state.outputs.outputs.alb_zone_id
+    name                   = data.terraform_remote_state.outputs.outputs.alb_dns_name  # ALB DNS name
+    zone_id                = data.terraform_remote_state.outputs.outputs.alb_zone_id   # ALB Zone ID
     evaluate_target_health = true
   }
 
   lifecycle {
-    create_before_destroy = true
+    # We are not creating anything new; only updating the existing record
+    create_before_destroy = false
     prevent_destroy       = true
   }
 }
