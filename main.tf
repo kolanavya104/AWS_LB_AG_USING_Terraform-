@@ -11,8 +11,7 @@ resource "aws_launch_configuration" "example" {
                 #!/bin/bash
                 yum install -y httpd
                 systemctl start httpd
-                systemctl enable httpd
-                echo "${file("${path.module}/AWS_LB_AG_USING_Terraform-/index.html")}" > /var/www/html/index.html
+                aws s3 cp s3://testterraform123-tf/index.html /var/www/html/index.html
                 nohup busybox httpd -f -p 8080 &
                 EOF
 
