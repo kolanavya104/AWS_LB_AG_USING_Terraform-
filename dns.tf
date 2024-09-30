@@ -4,7 +4,7 @@ data "terraform_remote_state" "outputs" {
 
   # Specify the path to the directory where your output.tf is located
   config = {
-    path = "../terraform.tfstate"
+    path = "./terraform.tfstate"
   }
 }
 
