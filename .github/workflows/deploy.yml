@@ -40,7 +40,8 @@ jobs:
 
     - name: Terraform Apply
       working-directory: ./
-      run: terraform apply -auto-approve tfplan -var="server_port=8080"
+      run: terraform apply -auto-approve tfplan
+
 
     - name: Terraform Init for dns.tf
       working-directory: ./
