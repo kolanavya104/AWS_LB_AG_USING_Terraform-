@@ -21,8 +21,8 @@ resource "aws_security_group" "instance" {
 
     #Allow all inbound access
     ingress {
-        from_port = var.server_port
-        to_port = var.server_port
+        from_port = 8080
+        to_port = 8080
         protocol = "tcp"
         cidr_blocks = ["0.0.0.0/0"]
     }
