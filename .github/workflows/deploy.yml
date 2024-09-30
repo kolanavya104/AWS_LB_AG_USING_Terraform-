@@ -30,13 +30,13 @@ jobs:
         sudo mv terraform /usr/local/bin/
         terraform --version
 
-    - name: Terraform Init for create_bucket.tf
+    - name: Terraform Init for main.tf
       working-directory: ./s3
       run: |
         terraform init
         terraform apply -auto-approve main.tf
 
-    - name: Terraform Init for run.tf
+    - name: Terraform Init for dns.tf
       working-directory: ./s3
       run: |
         terraform init
