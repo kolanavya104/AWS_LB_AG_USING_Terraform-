@@ -9,7 +9,10 @@ resource "aws_launch_configuration" "example" {
 
     user_data = <<-EOF
                 #!/bin/bash
-                echo "Hai" > index.html
+                yum install -y httpd
+                systemctl start httpd
+                systemctl enable httpd
+                echo "${file("${path.module}/AWS_LB_AG_USING_Terraform-/index.html")}" > /var/www/html/index.html
                 nohup busybox httpd -f -p 8080 &
                 EOF
 
