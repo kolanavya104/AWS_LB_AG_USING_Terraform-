@@ -12,10 +12,19 @@ data "aws_route53_zone" "primary" {
   name = data.terraform_remote_state.outputs.outputs.domain_name
 }
 
-# Create the Route 53 record if it doesn't already exist
-resource "aws_route53_record" "getterraform_com" {
+# Check for the existing Route 53 record
+data "aws_route53_record" "existing_record" {
+  count   = 1  # We just want one instance of this data source
   zone_id = data.aws_route53_zone.primary.zone_id
+  name    = "${data.terraform_remote_state.outputs.outputs.domain_name}."
+  type    = "A"
+}
 
+# Create the Route 53 record only if it doesn't already exist
+resource "aws_route53_record" "getterraform_com" {
+  count = length(data.aws_route53_record.existing_record) == 0 ? 1 : 0
+
+  zone_id = data.aws_route53_zone.primary.zone_id
   name    = data.terraform_remote_state.outputs.outputs.domain_name
   type    = "A"
 
@@ -26,19 +35,7 @@ resource "aws_route53_record" "getterraform_com" {
   }
 
   lifecycle {
-    create_before_destroy = true  # Prevent resource destruction before re-creation
-    prevent_destroy = true         # Prevent accidental deletion
-  }
-}
-
-# A local-exec command that can be run to manually check for the record
-resource "null_resource" "check_existing_record" {
-  provisioner "local-exec" {
-    command = "aws route53 list-resource-record-sets --hosted-zone-id ${data.aws_route53_zone.primary.zone_id} --query 'ResourceRecordSets[?Name==`${data.terraform_remote_state.outputs.outputs.domain_name}.`] | [0]'"
-    interpreter = ["bash", "-c"]
-  }
-
-  triggers = {
-    always_run = "${timestamp()}"
+    create_before_destroy = true
+    prevent_destroy       = true
   }
 }
