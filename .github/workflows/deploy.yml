@@ -1,0 +1,43 @@
+name: Terraform CI/CD Workflow
+
+on:
+  push:
+    branches:
+      - main  # Change this to your target branch
+  pull_request:
+    branches:
+      - main  # Change this to your target branch
+
+jobs:
+  terraform:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v2
+
+    - name: Set up AWS CLI
+      uses: aws-actions/configure-aws-credentials@v1
+      with:
+        aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+        aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+        aws-region: us-east-2
+
+    - name: Install Terraform
+      run: |
+        curl -LO "https://releases.hashicorp.com/terraform/$(curl -s https://checkpoint-api.hashicorp.com/v1/check/terraform | jq -r .current_version)/terraform_$(curl -s https://checkpoint-api.hashicorp.com/v1/check/terraform | jq -r .current_version)_linux_amd64.zip"
+        unzip terraform_*_linux_amd64.zip
+        sudo mv terraform /usr/local/bin/
+        terraform --version
+
+    - name: Terraform Init for create_bucket.tf
+      working-directory: ./s3
+      run: |
+        terraform init
+        terraform apply -auto-approve main.tf
+
+    - name: Terraform Init for run.tf
+      working-directory: ./s3
+      run: |
+        terraform init
+        terraform apply -auto-approve dns.tf
