@@ -31,13 +31,13 @@ jobs:
         terraform --version
 
     - name: Terraform Init for main.tf
-      working-directory: ./s3
+      working-directory: ./
       run: |
         terraform init
         terraform apply -auto-approve main.tf
 
     - name: Terraform Init for dns.tf
-      working-directory: ./s3
+      working-directory: ./
       run: |
         terraform init
         terraform apply -auto-approve dns.tf
