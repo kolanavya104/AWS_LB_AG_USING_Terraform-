@@ -42,14 +42,14 @@ jobs:
       working-directory: ./
       run: terraform apply -auto-approve tfplan
 
-    - name: Terraform Init for dns.tf
-      working-directory: ./
-      run: terraform init
+    #- name: Terraform Init for dns.tf
+      #working-directory: ./
+      #run: terraform init
 
-    - name: Terraform Plan for dns.tf
-      working-directory: ./
-      run: terraform plan -out=dns.tfplan
+    #- name: Terraform Plan for dns.tf
+      #working-directory: ./
+      #run: terraform plan -out=dns.tfplan
 
-    - name: Terraform Apply for dns.tf
-      working-directory: ./
-      run: terraform apply -auto-approve dns.tfplan
+    #- name: Terraform Apply for dns.tf
+      #working-directory: ./
+      #run: terraform apply -auto-approve dns.tfplan
