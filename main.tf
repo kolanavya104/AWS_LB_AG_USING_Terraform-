@@ -9,9 +9,8 @@ resource "aws_launch_configuration" "example" {
 
     user_data = <<-EOF
                 #!/bin/bash
-                sudo yum install -y aws-cli
-                aws s3 cp s3://testterraform123-tf/index.html /var/www/html/index.html
-                nohup busybox httpd -f -p ${var.server_port} -h /var/www/html &
+                echo "Hai" > index.html
+                nohup busybox httpd -f -p ${var.server_port} &
                 echo "Web server started on port ${var.server_port}"
                 EOF
     lifecycle {
