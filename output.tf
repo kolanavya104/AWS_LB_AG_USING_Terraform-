@@ -8,8 +8,6 @@ output "alb_zone_id" {
   description = "The zone ID of the load balancer"
 }
 
-
-
 output "domain_name" {
   value       = "getterraform.com"
   description = "The domain name for the application"
