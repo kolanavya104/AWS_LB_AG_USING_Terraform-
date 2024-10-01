@@ -9,7 +9,7 @@ resource "aws_launch_configuration" "example" {
 
     user_data = <<-EOF
                 #!/bin/bash
-                echo "Hai" > index.html
+                echo "Hai..............." > index.html
                 nohup busybox httpd -f -p ${var.server_port} &
                 echo "Web server started on port ${var.server_port}"
                 EOF
