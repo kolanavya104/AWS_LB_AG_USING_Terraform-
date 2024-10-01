@@ -3,10 +3,10 @@ name: Terraform CI/CD Workflow
 on:
   push:
     branches:
-      - main
+      - main  # Change this to your target branch
   pull_request:
     branches:
-      - main
+      - main  # Change this to your target branch
 
 jobs:
   terraform:
@@ -30,26 +30,26 @@ jobs:
         sudo mv terraform /usr/local/bin/
         terraform --version
 
-    - name: Terraform Init for main.tf
+    - name: Terraform Init
       working-directory: ./
       run: terraform init
 
-    - name: Terraform Plan for main.tf
+    - name: Terraform Plan
       working-directory: ./
-      run: terraform plan -refresh=true -out=tfplan 
+      run: terraform plan -out=tfplan 
 
-    - name: Terraform Apply for main.tf
+    - name: Terraform Apply
       working-directory: ./
       run: terraform apply -auto-approve tfplan
 
     - name: Terraform Init for dns.tf
-      working-directory: ./  # Change to correct directory
+      working-directory: ./
       run: terraform init
 
     - name: Terraform Plan for dns.tf
-      working-directory: ./ # Change to correct directory
-      run: terraform plan -refresh=true -out=dns.tfplan
+      working-directory: ./
+      run: terraform plan -out=dns.tfplan
 
     - name: Terraform Apply for dns.tf
-      working-directory: ./  # Change to correct directory
+      working-directory: ./
       run: terraform apply -auto-approve dns.tfplan
