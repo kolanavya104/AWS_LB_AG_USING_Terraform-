@@ -77,14 +77,26 @@ jobs:
           context: .
           push: true
           tags: navyakola104/webapp:${{ github.sha }}
-      
-      - name: Deploy to EC2
-        uses: appleboy/ssh-action@master
+
+      - name: Retrieve Terraform outputs
+        id: tf-outputs
+        run: |
+          echo "Fetching Terraform outputs..."
+          EC2_HOST=$(terraform output -raw ec2_host)
+          EC2_USERNAME=$(terraform output -raw ec2_username)
+          EC2_PRIVATE_KEY=$(terraform output -raw ec2_private_key)
+          
+          echo "::set-output name=ec2_host::$EC2_HOST"
+          echo "::set-output name=ec2_username::$EC2_USERNAME"
+          echo "::set-output name=ec2_private_key::$EC2_PRIVATE_KEY"
+
+      - name: Use EC2 credentials in the next step
         with:
-          host: ${{ secrets.EC2_HOST }}  # Ensure this points to your existing EC2 instance
-          username: ${{ secrets.EC2_USERNAME }}
-          key: ${{ secrets.EC2_PRIVATE_KEY }}
+          host: ${{ steps.tf-outputs.outputs.ec2_host }}
+          username: ${{ steps.tf-outputs.outputs.ec2_username }}
+          key: ${{ steps.tf-outputs.outputs.ec2_private_key }}
           script: |
+            # Your script logic here
             docker stop webapp || true
             docker rm webapp || true
             docker pull ${{ secrets.DOCKER_USERNAME }}/webapp:${{ github.sha }}
