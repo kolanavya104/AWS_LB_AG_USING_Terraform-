@@ -1,3 +1,4 @@
+
 # Read the outputs from the existing configuration
 data "terraform_remote_state" "outputs" {
   backend = "local"
