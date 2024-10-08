@@ -47,8 +47,3 @@ resource "aws_route53_record" "getterraform_com" {
     prevent_destroy       = true
   }
 }
-
-
-
-
-
