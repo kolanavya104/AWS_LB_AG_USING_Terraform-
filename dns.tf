@@ -1,4 +1,3 @@
-
 # Read the outputs from the existing configuration
 data "terraform_remote_state" "outputs" {
   backend = "local"
@@ -48,5 +47,3 @@ resource "aws_route53_record" "getterraform_com" {
     prevent_destroy       = true
   }
 }
-
-
