@@ -2,15 +2,20 @@ provider "aws" {
     region = "us-east-2"
 }
 
+# Check for the existing Load Balancer
+data "aws_lb" "existing" {
+    name = "terraform-asg-example"  # Use the name of your load balancer here
+}
+
 resource "aws_launch_configuration" "example" {
-    image_id = "ami-085f9c64a9b75eed5"
+    image_id      = "ami-085f9c64a9b75eed5"
     instance_type = "t2.micro"
     security_groups = [aws_security_group.instance.id]
 
     user_data = <<-EOF
                 #!/bin/bash
                 echo "Hai" > index.html
-                nohup busybox httpd -f -p ${var.server_port} &
+                nohup busybox httpd -f -p ${var.server_port} & 
                 echo "Web server started on port ${var.server_port}"
                 EOF
     lifecycle {
@@ -24,8 +29,8 @@ resource "aws_security_group" "instance" {
     # Allow all inbound access
     ingress {
         from_port = 8080
-        to_port = 8080
-        protocol = "tcp"
+        to_port   = 8080
+        protocol  = "tcp"
         cidr_blocks = ["0.0.0.0/0"]
     }
 }
@@ -59,6 +64,7 @@ data "aws_subnets" "default" {
 }
 
 resource "aws_lb" "example" {
+    count              = length(data.aws_lb.existing) == 0 ? 1 : 0  # Create only if it doesn't exist
     name               = "terraform-asg-example"
     load_balancer_type = "application"
     subnets            = data.aws_subnets.default.ids
@@ -66,7 +72,7 @@ resource "aws_lb" "example" {
 }
 
 resource "aws_lb_listener" "http" {
-    load_balancer_arn = aws_lb.example.arn
+    load_balancer_arn = aws_lb.example[0].arn
     port              = 80
     protocol          = "HTTP"
 
