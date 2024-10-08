@@ -9,7 +9,9 @@ resource "aws_launch_configuration" "example" {
 
     user_data = <<-EOF
                 #!/bin/bash
-                echo "Hai" > index.html
+                sudo snap install aws-cli --classic
+                mkdir -p /var/www/html
+                sudo aws s3 cp s3://terraform83/index.html /var/www/html/index.html
                 nohup busybox httpd -f -p ${var.server_port} &
                 echo "Web server started on port ${var.server_port}"
                 EOF
